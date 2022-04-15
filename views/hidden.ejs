@@ -1,0 +1,71 @@
+<html lang="en">
+  <%- include("./partials/head.ejs") %>
+
+  <body>
+    <%- include("./partials/nav.ejs") %>
+
+    <div class="blogs content">
+      <h2>All Blogs</h2> <a href="/">Show Visible Post Only</a>
+
+      <% if (blogs.length > 0) { %> <% blogs.forEach(blog => { %>
+        <% if (blog.Hidden == 1) { %> 
+          <a href="/post/<%= blog.id %> ">
+            <h3 class="title"><%= blog.Title %></h3>
+            <p class="snippet"><%= blog.Body %></p>
+            <p class="snippet"><%= blog.Hidden %></p>
+          </a>
+          <button id="delete" class="delete-btn" data-id="<%= blog.id %>" ">Delete</button>
+           <button id="hid" class="hid-btn" data-id="<%= blog.id %>" ">
+            <% if (blog.Hidden == 0) { %>
+              Hide
+            <% }else { %>
+              Show
+            <% } %> 
+          </button>
+          <a href="/post/<%= blog.id  %>/edit" >Edit</a>
+          <hr />
+          <% } %> 
+      <% }) %> <% } else { %>
+      <p>There are no blogs to display...</p>
+      <% } %>
+    </div>
+
+
+    <script>
+// hiding / shoing post
+      const hid_btns= document.querySelectorAll(".hid-btn");
+
+      hid_btns.forEach( hid_btn => {
+        const endpoint = `/post/${hid_btn.dataset.id}`;
+        hid_btn.addEventListener("click", () => {
+        if(confirm("Are you sure about this action") == true){
+          fetch(endpoint, {
+            method: "PUT",
+          })
+          .then((response) => response.json())
+          .then((data) => window.location.href = data.redirect)
+          .catch((error) => console.log(error))
+        }
+      });
+    })
+
+      // delete post functionality
+      const delete_btns = document.querySelectorAll(".delete-btn");
+      delete_btns.forEach( delete_btn => {
+        const endpoint = `/post/${delete_btn.dataset.id}`;
+        delete_btn.addEventListener("click", () => {
+          if(confirm("Are you sure you want to delete this post") == true) {
+             fetch(endpoint, {
+              method: "DELETE"
+             })
+            .then((response) => response.json())
+            .then((data) => window.location.href = data.redirect)
+            .catch((error) => console.log(error))
+          }
+        console.log(endpoint);
+      });
+})
+      
+      </script>
+  </body>
+</html>

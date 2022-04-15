@@ -1,0 +1,27 @@
+<html lang="en">
+  <%- include("./partials/head.ejs") %>
+
+  <body>
+    <%- include("./partials/nav.ejs") %>
+
+    <div class="create-blog content">
+      <form action="/post/<%= blog[0].id %>/update " method="POST">
+        <label for="title">Blog title:</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value="<%= blog[0].Title %>"
+          required
+        />
+        <label for="body">Blog body:</label>
+        <textarea id="body" name="body" required><%= blog[0].Body %></textarea>
+        <button name="subtype" value="submit">Update</button>
+      </form>
+    </div>
+  </body>
+
+  <script>
+    CKEDITOR.replace("body");
+  </script>
+</html>

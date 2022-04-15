@@ -1,0 +1,54 @@
+<html lang="en">
+  <%- include("./partials/head.ejs") %>
+
+  <body>
+    <%- include("./partials/nav.ejs") %>
+
+    <div class="blogs content">
+      <h3 class="title"><%= blog[0].Title %></h3>
+      <p class="snippet"><%- blog[0].Body %></p>
+    </div>
+
+    <button id="delete" data-id="<%= blog[0].id %>" ">Delete</button>
+    <button id="hid" data-id="<%= blog[0].id %>" ">
+    <% if (blog[0].Hidden == 0) { %>
+      Hide
+    <% }else { %>
+      Show
+    <% } %> 
+    </button>
+    <a href="/post/<%= blog[0].id  %>/edit" >Edit</a>
+
+
+    <script>
+      const delete_btn = document.getElementById("delete");
+      const hid_btn = document.getElementById("hid");
+      
+      hid_btn.addEventListener("click", () => {
+        const endpoint = `/post/${hid_btn.dataset.id}`;
+        if(confirm("Are you sure about this action") == true){
+
+          fetch(endpoint, {
+            method: "PUT",
+          })
+          .then((response) => response.json())
+          .then((data) => window.location.href = data.redirect)
+          .catch((error) => console.log(error))
+        }
+      });
+
+      delete_btn.addEventListener("click", () => {
+        const endpoint = `/post/${delete_btn.dataset.id}`;
+        if(confirm("Are you sure you want to delete this post") == true){
+
+          fetch(endpoint, {
+            method: "DELETE"
+          })
+          .then((response) => response.json())
+          .then((data) => window.location.href = data.redirect)
+          .catch((error) => console.log(error))
+        }
+      });
+      </script>
+  </body>
+</html>
